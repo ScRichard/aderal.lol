@@ -39,10 +39,31 @@ class Handler:
         self.users = self.connection[config.ACCOUNTS_COLLECTION]
         self.tokens = self.connection[config.TOKENS_COLLECTION]
 
-    def register_user(self, name : str, password : str, token : str):
-        pass
 
-    def is_token_used_and_update(self, name : str, token : str) -> bool:
+    def is_username_valid(self, username):
+        return self.users.find_one({"username": username}) == None
+    def add_user(self, username : str, password : str):
+        self.users.insert_one({
+            "username": username,
+            "password": password,
+            "role_id": 0,
+            "access_cookie": {
+                "token": None,
+                "created": None
+            }
+        })
+
+    def update_access_cookie(self, username : str):
+        self.users.find_one_and_update({"username": username}, {"$set": {
+            "access_cookie": {
+                "token": secrets.token_hex(10),
+                "created": str(datetime.now())
+            }
+        }})
+    def get_all_users(self):
+        return self.users.find()
+
+    def is_token_used_and_update(self, username : str, token : str) -> bool:
         result = self.tokens.find_one({ "token": token })
 
         if result:
@@ -53,7 +74,7 @@ class Handler:
                                                            {
                                                                "is_used": True,
                                                                "used_at": str(datetime.now()),
-                                                               "name": name
+                                                               "name": username
                                                            }
                                                         })
             return False
