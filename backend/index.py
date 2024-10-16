@@ -12,9 +12,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 bcrypt = Bcrypt(app)
 
-# A helper function to add CORS headers manually
 def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'  # Allows all origins, modify this to specific domains if needed
+    response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
@@ -44,11 +43,8 @@ def login():
 
 @app.route("/register", methods=['POST'])
 def register():
-    print("Try")
     __username = request.form.get('username')
     __token = request.form.get('token')
-
-    print(__username, __token)
 
     __data = db.Handler()
 
