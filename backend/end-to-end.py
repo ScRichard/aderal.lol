@@ -10,7 +10,6 @@ def generate_keys():
     public_key = private_key.public_key()
     return private_key, public_key
 
-# Serialize keys to bytes for sharing/storing
 def serialize_public_key(public_key):
     return public_key.public_bytes(
         encoding=serialization.Encoding.PEM,

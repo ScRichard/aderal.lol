@@ -41,8 +41,6 @@ class Handler:
 
 
     def is_username_valid(self, username):
-        if not config.is_valid_username(username):
-            return False
 
         return self.users.find_one({"username": username}) == None
     def add_user(self, username : str, password : str):
